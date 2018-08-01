@@ -29,6 +29,7 @@ import timber.log.Timber;
 
 /**
  * This is a helper class to manage the connection to the Custom Tabs Service.
+ * 帮助类，用于打开网页
  */
 public class CustomTabActivityHelper implements ServiceConnectionCallback {
     private CustomTabsSession mCustomTabsSession;

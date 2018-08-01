@@ -643,13 +643,13 @@ public class CardBrowser extends NavigationDrawerActivity implements
             return true;
         }
         switch (item.getItemId()) {
-
+            /*添加笔记*/
             case R.id.action_add_card_from_card_browser:
                 Intent intent = new Intent(CardBrowser.this, NoteEditor.class);
                 intent.putExtra(NoteEditor.EXTRA_CALLER, NoteEditor.CALLER_CARDBROWSER_ADD);
                 startActivityForResultWithAnimation(intent, ADD_NOTE, ActivityTransitionAnimation.LEFT);
                 return true;
-
+            /*保存搜索结果*/
             case R.id.action_save_search:
                 String searchTerms = mSearchView.getQuery().toString();
                 showDialogFragment(CardBrowserMySearchesDialog.newInstance(null, mMySearchesDialogListener,
@@ -669,6 +669,7 @@ public class CardBrowser extends NavigationDrawerActivity implements
                 showDialogFragment(CardBrowserMySearchesDialog.newInstance(savedFilters, mMySearchesDialogListener,
                         "", CardBrowserMySearchesDialog.CARD_BROWSER_MY_SEARCHES_TYPE_LIST));
                 return true;
+            /*显示排序方式*/
             case R.id.action_sort_by_size:
                 showDialogFragment(CardBrowserOrderDialog
                         .newInstance(mOrder, mOrderAsc, mOrderDialogListener));

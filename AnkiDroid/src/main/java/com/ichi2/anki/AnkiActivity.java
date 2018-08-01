@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import com.ichi2.anim.ActivityTransitionAnimation;
 import com.ichi2.anki.dialogs.AsyncDialogFragment;
 import com.ichi2.anki.dialogs.DialogHandler;
+import com.ichi2.anki.dialogs.DialogHandlerK;
 import com.ichi2.anki.dialogs.SimpleMessageDialog;
 import com.ichi2.async.CollectionLoader;
 import com.ichi2.compat.CompatHelper;
@@ -45,7 +46,7 @@ public class AnkiActivity extends AppCompatActivity implements LoaderManager.Loa
     public final int SIMPLE_NOTIFICATION_ID = 0;
     public static final int REQUEST_REVIEW = 901;
 
-    private DialogHandler mHandler = new DialogHandler(this);
+    private DialogHandlerK mHandler = new DialogHandlerK(this);
 
     // custom tabs
     private CustomTabActivityHelper mCustomTabActivityHelper;
@@ -54,6 +55,7 @@ public class AnkiActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // The hardware buttons should control the music volume
+        //可以用音量键控制音乐音量
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         // Set the theme
         Themes.setTheme(this);
@@ -258,6 +260,7 @@ public class AnkiActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!colIsOpen()) {
             showProgressBar();
         }
+        /*重新开始loader*/
         getSupportLoaderManager().restartLoader(0, null, this);
     }
 
@@ -362,7 +365,7 @@ public class AnkiActivity extends AppCompatActivity implements LoaderManager.Loa
             showDialogFragment(newFragment);
         } catch (IllegalStateException e) {
             // Store a persistent message to SharedPreferences instructing AnkiDroid to show dialog
-            DialogHandler.storeMessage(newFragment.getDialogHandlerMessage());
+            DialogHandlerK.Companion.storeMessage(newFragment.getDialogHandlerMessage());
             // Show a basic notification to the user in the notification bar in the meantime
             String title = newFragment.getNotificationTitle();
             String message = newFragment.getNotificationMessage();
@@ -444,7 +447,7 @@ public class AnkiActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    public DialogHandler getDialogHandler() {
+    public DialogHandlerK getDialogHandler() {
         return mHandler;
     }
 

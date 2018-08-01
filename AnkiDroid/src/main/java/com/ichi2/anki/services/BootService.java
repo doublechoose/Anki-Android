@@ -85,7 +85,7 @@ public class BootService extends IntentService {
             throw new RuntimeException(e);
         }
     }
-
+    /*设置定时通知*/
     public static void scheduleNotification(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

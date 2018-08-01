@@ -24,10 +24,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.Toolbar;
@@ -145,6 +143,7 @@ public class NoteEditor extends AnkiActivity {
 
     /**
      * Broadcast that informs us when the sd card is about to be unmounted
+     * 当sd卡即将卸载时通知我们的广播
      */
     private BroadcastReceiver mUnmountReceiver = null;
 
@@ -1108,6 +1107,7 @@ public class NoteEditor extends AnkiActivity {
         mEditFields = new LinkedList<>();
 
         // Use custom font if selected from preferences
+        // 自定义字体
         Typeface mCustomTypeface = null;
         SharedPreferences preferences = AnkiDroidApp.getSharedPrefs(getBaseContext());
         String customFont = preferences.getString("browserEditorFont", "");

@@ -25,6 +25,8 @@ import timber.log.Timber;
  * We're not allowed to commit fragment transactions from Loader.onLoadCompleted(),
  * and it's unsafe to commit them from an AsyncTask onComplete event, so we work 
  * around this by using a message handler.
+ * 我们不允许从Loader.onLoadCompleted（）提交fragment事务，并且从AsyncTask onComplete
+ * 事件提交它们是不安全的，所以我们通过使用消息处理程序来解决这个问题。
  */
 public class DialogHandler extends Handler {
 

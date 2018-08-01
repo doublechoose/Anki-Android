@@ -15,6 +15,7 @@
 package com.ichi2.anki;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -104,7 +105,7 @@ public class StudyOptionsFragment extends Fragment implements Toolbar.OnMenuItem
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         try {
             mListener = (StudyOptionsListener) activity;

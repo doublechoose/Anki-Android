@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import com.ichi2.anim.ActivityTransitionAnimation;
 import com.ichi2.anki.dialogs.DialogHandler;
+import com.ichi2.anki.dialogs.DialogHandlerK;
 import com.ichi2.anki.services.ReminderService;
 
 import java.io.File;
@@ -39,6 +40,7 @@ public class IntentHandler extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.progress_bar);
+        //获取intent
         Intent intent = getIntent();
         Timber.v(intent.toString());
         Intent reloadIntent = new Intent(this, DeckPicker.class);
@@ -85,6 +87,7 @@ public class IntentHandler extends Activity {
                     String tempOutDir = Uri.fromFile(new File(getCacheDir(), filename)).getEncodedPath();
                     successful = copyFileToCache(intent, tempOutDir);
                     // Show import dialog
+                    //显示导入dialog
                     if (successful) {
                         sendShowImportFileDialogMsg(tempOutDir);
                     } else {
@@ -103,6 +106,7 @@ public class IntentHandler extends Activity {
                 }
             }
             // Start DeckPicker if we correctly processed ACTION_VIEW
+            // 导入成功，就启动DeckPicker
             if (successful) {
                 reloadIntent.setAction(action);
                 reloadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -164,13 +168,13 @@ public class IntentHandler extends Activity {
         handlerMessage.setData(msgData);
         if (filename.equals("collection.apkg")) {
             // Show confirmation dialog asking to confirm import with replace when file called "collection.apkg"
-            handlerMessage.what = DialogHandler.MSG_SHOW_COLLECTION_IMPORT_REPLACE_DIALOG;
+            handlerMessage.what = DialogHandlerK.MSG_SHOW_COLLECTION_IMPORT_REPLACE_DIALOG;
         } else {
             // Otherwise show confirmation dialog asking to confirm import with add
-            handlerMessage.what = DialogHandler.MSG_SHOW_COLLECTION_IMPORT_ADD_DIALOG;
+            handlerMessage.what = DialogHandlerK.MSG_SHOW_COLLECTION_IMPORT_ADD_DIALOG;
         }
         // Store the message in AnkiDroidApp message holder, which is loaded later in AnkiActivity.onResume
-        DialogHandler.storeMessage(handlerMessage);
+        DialogHandlerK.Companion.storeMessage(handlerMessage);
     }
 
     /**
@@ -181,7 +185,7 @@ public class IntentHandler extends Activity {
         Message handlerMessage = Message.obtain();
         handlerMessage.what = DialogHandler.MSG_DO_SYNC;
         // Store the message in AnkiDroidApp message holder, which is loaded later in AnkiActivity.onResume
-        DialogHandler.storeMessage(handlerMessage);
+        DialogHandlerK.Companion.storeMessage(handlerMessage);
     }
 
     /** Finish Activity using FADE animation **/
