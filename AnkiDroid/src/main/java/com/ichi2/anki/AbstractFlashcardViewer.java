@@ -48,6 +48,7 @@ import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
+import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
@@ -253,6 +254,7 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
     protected LinearLayout mEase3Layout;
     protected LinearLayout mEase4Layout;
     protected RelativeLayout mTopBarLayout;
+    /*简单的定时器控件*/
     private Chronometer mCardTimer;
     protected Whiteboard mWhiteboard;
     private ClipboardManager mClipboard;
@@ -307,7 +309,7 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
     /**
      * Custom button allocation
      */
-    protected Map<Integer, Integer> mCustomButtons = new HashMap<>();
+    protected SparseIntArray mCustomButtons = new SparseIntArray();
 
     protected static final int GESTURE_NOTHING = 0;
     private static final int GESTURE_SHOW_ANSWER = 1;
@@ -1294,6 +1296,7 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
             return;
         }
         // Set the dots appearing below the toolbar
+        /*\u2022 是 • */
         switch (ease) {
             case EASE_1:
                 mChosenAnswer.setText("\u2022");
@@ -1465,30 +1468,44 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
     // because of setDisplayZoomControls.
     private WebView createWebView() {
         WebView webView = new MyWebView(this);
+        /*启用View的绘图缓存后，绘图将重定向到屏幕外位图。 某些视图（如ImageView）
+        必须能够绕过此机制（如果它们已经绘制了单个位图），以避免不必要地使用内存。*/
         webView.setWillNotCacheDrawing(true);
+        /*滚动条样式可在视图边缘显示滚动条，而不会增加填充。 滚动条将覆盖为半透明。*/
         webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         if (CompatHelper.isHoneycomb()) {
             // Disable the on-screen zoom buttons for API > 11
+            /*设置WebView是否应显示屏幕缩放控件*/
             webView.getSettings().setDisplayZoomControls(false);
         }
+        /*设置WebView是否应使用其内置缩放机制。*/
         webView.getSettings().setBuiltInZoomControls(true);
+        /*设置WebView是否应支持使用其屏幕缩放控件和手势进行缩放。*/
         webView.getSettings().setSupportZoom(true);
         // Start at the most zoomed-out level
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new AnkiDroidWebChromeClient());
         // Problems with focus and input tags is the reason we keep the old type answer mechanism for old Androids.
+        /*设置此视图在触摸模式下是否可以获得焦点。*/
         webView.setFocusableInTouchMode(mUseInputTag);
+        /*当不再scroll的时候，是否让scrollbar消失*/
         webView.setScrollbarFadingEnabled(true);
         Timber.d("Focusable = %s, Focusable in touch mode = %s", webView.isFocusable(), webView.isFocusableInTouchMode());
 
         webView.setWebViewClient(new WebViewClient() {
             // Filter any links using the custom "playsound" protocol defined in Sound.java.
             // We play sounds through these links when a user taps the sound icon.
+
+            /*当要在当前WebView中加载新URL时，为主机应用程序提供接管控件的机会。 如果未提供WebViewClient，
+            则默认情况下WebView将要求活动管理器为URL选择正确的处理程序。 如果提供了WebViewClient，
+            则返回true表示主机应用程序处理url，而return false表示当前WebView处理url。
+             使用POST“方法”的请求不会调用此方法。*/
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("playsound:")) {
                     // Send a message that will be handled on the UI thread.
+                    /*发送音频路径到UI线程*/
                     Message msg = Message.obtain();
                     String soundPath = url.replaceFirst("playsound:", "");
                     msg.obj = soundPath;
@@ -1666,6 +1683,7 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
         }
 
         // Show next review time
+        /*显示下次复习时间*/
         if (mShowNextReviewTime) {
             mNext1.setText(mSched.nextIvlStr(this, mCurrentCard, 1));
             mNext2.setText(mSched.nextIvlStr(this, mCurrentCard, 2));
@@ -2062,6 +2080,7 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
         answer = typeAnsAnswerFilter(answer, userAnswer, correctAnswer);
 
         mIsSelecting = false;
+        /*enrichWithQADiv: 添加<div class="xxx">content</div> 标签*/
         updateCard(enrichWithQADiv(answer, true));
         showEaseButtons();
         // If the user wants to show the next question automatically
@@ -2418,9 +2437,13 @@ public abstract class AbstractFlashcardViewer extends NavigationDrawerActivity {
     private static int calculateDynamicFontSize(String htmlContent) {
         // Replace each <br> with 15 spaces, each <hr> with 30 spaces, then
         // remove all html tags and spaces
+        /*<hr>结束符
+        * <br>换行符*/
+        /*用15个空格替换每个<br>，每个<hr>替换成30个空格，然后移除所有的html标签和空格*/
         String realContent = htmlContent.replaceAll("\\<br.*?\\>", " ");
         realContent = realContent.replaceAll("\\<hr.*?\\>", " ");
         realContent = realContent.replaceAll("\\<.*?\\>", "");
+        /*&nbsp; 空格标签*/
         realContent = realContent.replaceAll("&nbsp;", " ");
         return Math.max(DYNAMIC_FONT_MIN_SIZE, DYNAMIC_FONT_MAX_SIZE - realContent.length() / DYNAMIC_FONT_FACTOR);
     }

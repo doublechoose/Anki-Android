@@ -611,6 +611,7 @@ public class Utils {
 
     public static void unzipFiles(ZipFile zipFile, String targetDirectory, String[] zipEntries,
                                   Map<String, String> zipEntryToFilenameMap) throws IOException {
+        /*缓冲区*/
         byte[] buf = new byte[FILE_COPY_BUFFER_SIZE];
         File dir = new File(targetDirectory);
         if (!dir.exists() && !dir.mkdirs()) {

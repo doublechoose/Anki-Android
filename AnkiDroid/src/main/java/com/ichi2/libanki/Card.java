@@ -408,6 +408,7 @@ public class Card implements Cloneable {
         if (pos == -1) {
             return s;
         }
+        /*trim 去掉空格*/
         return s.substring(pos + target.length()).trim();
     }
 
